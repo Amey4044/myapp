@@ -19,10 +19,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t cypher7/todoapp .
+        run: docker build -t cypher7/todoapp:${{ github.sha }} .
 
       - name: Push Docker image to Docker Hub
-        run: docker push cypher7/todoapp
+        run: docker push cypher7/todoapp:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-            docker pull cypher7/todoapp
+            docker pull cypher7/todoapp:${{ github.sha }}
             docker stop todoapp || true
             docker rm todoapp || true
-            docker run -d -p 80:80 --name todoapp cypher7/todoapp
+            docker run -d -p 80:80 --name todoapp cypher7/todoapp:${{ github.sha }}
