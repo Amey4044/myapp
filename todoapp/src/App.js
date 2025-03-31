@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, TextField, Container, Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
 import "./App.css";
 
 function App() {
@@ -13,21 +14,39 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Todo List</h1>
-      <input
-        type="text"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-        placeholder="Enter a new todo"
-      />
-      <button onClick={addTodo}>Add Todo</button>
-      <ul>
-        {todos.map((todo, index) => (
-          <li key={index}>{todo}</li>
-        ))}
-      </ul>
-    </div>
+    <Container maxWidth="sm">
+      <Paper elevation={3} style={{ padding: "20px", marginTop: "40px" }}>
+        <Typography variant="h3" align="center" gutterBottom>
+          Todo List
+        </Typography>
+        
+        <TextField
+          fullWidth
+          label="Enter a new todo"
+          variant="outlined"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          style={{ marginBottom: "20px" }}
+        />
+        
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={addTodo} 
+          fullWidth
+        >
+          Add Todo
+        </Button>
+
+        <List>
+          {todos.map((todo, index) => (
+            <ListItem key={index}>
+              <ListItemText primary={todo} />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
+    </Container>
   );
 }
 
