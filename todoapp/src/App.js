@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Button, TextField, Container, Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Container,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  IconButton,
+  Checkbox,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import "./App.css";
 
 function App() {
@@ -8,9 +20,24 @@ function App() {
 
   const addTodo = () => {
     if (newTodo.trim() !== "") {
-      setTodos([...todos, newTodo]);
+      setTodos([
+        ...todos,
+        { text: newTodo, completed: false, id: Date.now() },
+      ]);
       setNewTodo("");
     }
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  const toggleCompleted = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
   return (
@@ -19,7 +46,7 @@ function App() {
         <Typography variant="h3" align="center" gutterBottom>
           Todo List
         </Typography>
-        
+
         <TextField
           fullWidth
           label="Enter a new todo"
@@ -28,20 +55,54 @@ function App() {
           onChange={(e) => setNewTodo(e.target.value)}
           style={{ marginBottom: "20px" }}
         />
-        
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={addTodo} 
-          fullWidth
-        >
+
+        <Button variant="contained" color="primary" onClick={addTodo} fullWidth>
           Add Todo
         </Button>
 
         <List>
-          {todos.map((todo, index) => (
-            <ListItem key={index}>
-              <ListItemText primary={todo} />
+          {todos.map((todo) => (
+            <ListItem
+              key={todo.id}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: todo.completed ? "#e0f7fa" : "white",
+                marginBottom: "10px",
+                padding: "10px",
+                borderRadius: "4px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flex: 1,
+                }}
+              >
+                <Checkbox
+                  checked={todo.completed}
+                  onChange={() => toggleCompleted(todo.id)}
+                  color="primary"
+                />
+                <ListItemText
+                  primary={todo.text}
+                  style={{
+                    textDecoration: todo.completed ? "line-through" : "none",
+                    color: todo.completed ? "#b0bec5" : "black",
+                  }}
+                />
+              </div>
+
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => deleteTodo(todo.id)}
+                color="secondary"
+              >
+                <DeleteIcon />
+              </IconButton>
             </ListItem>
           ))}
         </List>
